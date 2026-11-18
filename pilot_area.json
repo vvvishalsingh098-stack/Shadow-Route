@@ -1,0 +1,86 @@
+{
+  "version": 0.6,
+  "generator": "ShadowRoute hand-made local sample",
+  "elements": [
+    {
+      "type": "way",
+      "id": 1001,
+      "nodes": [100, 101, 102, 103],
+      "tags": { "highway": "residential", "name": "Sample shaded north street", "tree_lined": "yes" },
+      "geometry": [
+        { "lat": 28.631, "lon": 77.215 },
+        { "lat": 28.631, "lon": 77.217 },
+        { "lat": 28.631, "lon": 77.219 },
+        { "lat": 28.631, "lon": 77.221 }
+      ]
+    },
+    {
+      "type": "way",
+      "id": 1002,
+      "nodes": [200, 201, 202, 203],
+      "tags": { "highway": "footway", "leisure": "park", "surface": "ground", "near_waterway": "yes" },
+      "geometry": [
+        { "lat": 28.633, "lon": 77.215 },
+        { "lat": 28.633, "lon": 77.217 },
+        { "lat": 28.633, "lon": 77.219 },
+        { "lat": 28.633, "lon": 77.221 }
+      ]
+    },
+    {
+      "type": "way",
+      "id": 1003,
+      "nodes": [300, 301, 302, 303],
+      "tags": { "highway": "primary", "surface": "asphalt", "ele": "216" },
+      "geometry": [
+        { "lat": 28.635, "lon": 77.215 },
+        { "lat": 28.635, "lon": 77.217 },
+        { "lat": 28.635, "lon": 77.219 },
+        { "lat": 28.635, "lon": 77.221 }
+      ]
+    },
+    {
+      "type": "way",
+      "id": 1004,
+      "nodes": [100, 200, 300],
+      "tags": { "highway": "residential", "surface": "paved" },
+      "geometry": [
+        { "lat": 28.631, "lon": 77.215 },
+        { "lat": 28.633, "lon": 77.215 },
+        { "lat": 28.635, "lon": 77.215 }
+      ]
+    },
+    {
+      "type": "way",
+      "id": 1005,
+      "nodes": [101, 201, 301],
+      "tags": { "highway": "living_street", "trees": "yes", "surface": "paved" },
+      "geometry": [
+        { "lat": 28.631, "lon": 77.217 },
+        { "lat": 28.633, "lon": 77.217 },
+        { "lat": 28.635, "lon": 77.217 }
+      ]
+    },
+    {
+      "type": "way",
+      "id": 1006,
+      "nodes": [102, 202, 302],
+      "tags": { "highway": "secondary", "tunnel": "yes", "layer": "-1", "surface": "unpaved" },
+      "geometry": [
+        { "lat": 28.631, "lon": 77.219 },
+        { "lat": 28.633, "lon": 77.219 },
+        { "lat": 28.635, "lon": 77.219 }
+      ]
+    },
+    {
+      "type": "way",
+      "id": 1007,
+      "nodes": [103, 203, 303],
+      "tags": { "highway": "footway", "covered": "yes", "surface": "paved" },
+      "geometry": [
+        { "lat": 28.631, "lon": 77.221 },
+        { "lat": 28.633, "lon": 77.221 },
+        { "lat": 28.635, "lon": 77.221 }
+      ]
+    }
+  ]
+}
