@@ -1,0 +1,14 @@
+{
+  "name": "shadowroute",
+  "version": "1.0.0",
+  "description": "A pedestrian route-finder mini project",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "fetch-data": "node scripts/fetchOverpass.js",
+    "test": "node tests/run_tests.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
