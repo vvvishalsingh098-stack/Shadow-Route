@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#102a24">
+  <title>ShadowRoute — Find a more comfortable walk</title>
+  <link rel="preconnect" href="https://unpkg.com">
+  <link rel="preconnect" href="https://tile.openstreetmap.org">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="ShadowRoute home">
+      <span class="brand-mark" aria-hidden="true">S</span>
+      <span>Shadow<span class="brand-light">Route</span></span>
+    </a>
+    <div class="topbar-note"><span class="status-dot"></span><span id="area-label">Loading area…</span></div>
+  </header>
+
+  <main class="layout">
+    <section class="map-panel" aria-label="Route map">
+      <div id="map" role="application" aria-label="OpenStreetMap. Click twice to choose start and end."></div>
+      <div class="map-hint" id="map-hint">
+        <span class="hint-step">1</span>
+        <span id="map-hint-text">Click the map to choose your start</span>
+      </div>
+      <div class="map-loading" id="map-loading" role="status" aria-live="polite">
+        <span class="spinner"></span><span>Loading map data…</span>
+      </div>
+    </section>
+
+    <aside class="sidebar">
+      <section class="intro">
+        <p class="eyebrow">WALK WITH MORE COMFORT</p>
+        <h1>Your route,<br><em>reimagined.</em></h1>
+        <p class="intro-copy">Find a shaded local walking route, or get driving directions between cities.</p>
+      </section>
+
+      <section class="controls card" aria-labelledby="route-settings-title">
+        <div class="section-heading">
+          <span class="section-icon" aria-hidden="true">↗</span>
+          <h2 id="route-settings-title">Route settings</h2>
+        </div>
+
+        <div class="select-control">
+          <label for="travel-mode">Route type</label>
+          <select id="travel-mode" disabled>
+            <option value="walking">Walking in a city</option>
+            <option value="driving">Driving across India</option>
+          </select>
+        </div>
+
+        <div class="select-control" id="area-control">
+          <label for="area-select">City / walking area</label>
+          <select id="area-select" aria-label="Select a city or walking area"></select>
+        </div>
+
+        <div class="point-list" aria-live="polite">
+          <div class="point-row">
+            <span class="point-marker start-marker" aria-hidden="true"></span>
+            <div class="point-text"><span class="point-label">START</span><span id="start-location">Choose a point on the map</span></div>
+          </div>
+          <div class="point-connector" aria-hidden="true"></div>
+          <div class="point-row">
+            <span class="point-marker end-marker" aria-hidden="true"></span>
+            <div class="point-text"><span class="point-label">DESTINATION</span><span id="end-location">Choose a second point</span></div>
+          </div>
+        </div>
+
+        <div class="slider-control walking-only">
+          <div class="slider-heading">
+            <label for="sun-weight">Sun sensitivity</label>
+            <output id="sun-value" for="sun-weight">1.5</output>
+          </div>
+          <input id="sun-weight" type="range" min="0" max="5" step="0.1" value="1.5">
+          <div class="range-labels"><span>Ignore shade</span><span>Prefer shade</span></div>
+        </div>
+
+        <div class="slider-control walking-only">
+          <div class="slider-heading">
+            <label for="flood-weight">Flood sensitivity</label>
+            <output id="flood-value" for="flood-weight">2.0</output>
+          </div>
+          <input id="flood-weight" type="range" min="0" max="5" step="0.1" value="2">
+          <div class="range-labels"><span>Ignore risk</span><span>Avoid risk</span></div>
+        </div>
+
+        <div class="select-control walking-only">
+          <label for="algorithm">Search algorithm</label>
+          <select id="algorithm">
+            <option value="astar">A* (usually faster)</option>
+            <option value="dijkstra">Dijkstra</option>
+          </select>
+        </div>
+
+        <div class="button-row">
+          <button id="find-route" class="primary-button" type="button" disabled>
+            <span>Find routes</span><span aria-hidden="true">→</span>
+          </button>
+          <button id="reset" class="reset-button" type="button">Reset</button>
+        </div>
+        <p id="error-message" class="error-message" role="alert" hidden></p>
+      </section>
+
+      <section class="network-control card walking-only">
+        <label class="checkbox-label" for="show-network">
+          <input id="show-network" type="checkbox">
+          <span class="custom-checkbox" aria-hidden="true"></span>
+          <span>Color roads by score</span>
+        </label>
+        <select id="network-score" aria-label="Network score to display" disabled>
+          <option value="sunPenalty">Sun exposure</option>
+          <option value="floodPenalty">Flood risk</option>
+        </select>
+      </section>
+
+      <section id="comparison" class="comparison card" aria-labelledby="comparison-title" hidden>
+        <div class="section-heading">
+          <span class="section-icon chart-icon" aria-hidden="true">▤</span>
+          <h2 id="comparison-title">Route comparison</h2>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Measure</th><th><span class="route-key red-key"></span>Shortest</th><th><span class="route-key green-key"></span>Shadow</th></tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">Distance</th><td id="shortest-distance">—</td><td id="shadow-distance">—</td></tr>
+              <tr><th scope="row">Sun exposure</th><td id="shortest-sun">—</td><td id="shadow-sun">—</td></tr>
+              <tr><th scope="row">Flood risk</th><td id="shortest-flood">—</td><td id="shadow-flood">—</td></tr>
+              <tr><th scope="row">Total cost</th><td id="shortest-cost">—</td><td id="shadow-cost">—</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="stats-heading">SEARCH PERFORMANCE</div>
+        <div class="stats-grid">
+          <div class="stat-card"><span class="stat-name">DIJKSTRA</span><strong id="dijkstra-nodes">—</strong><span>nodes · <span id="dijkstra-time">—</span> ms</span></div>
+          <div class="stat-card"><span class="stat-name">A*</span><strong id="astar-nodes">—</strong><span>nodes · <span id="astar-time">—</span> ms</span></div>
+        </div>
+      </section>
+      <section id="drive-summary" class="comparison card" aria-labelledby="drive-title" hidden>
+        <div class="section-heading">
+          <span class="section-icon chart-icon" aria-hidden="true">↗</span>
+          <h2 id="drive-title">Driving directions</h2>
+        </div>
+        <p><strong id="drive-distance">—</strong> · <span id="drive-duration">—</span></p>
+        <p class="map-footnote">Driving route provided by the public OSRM demo service.</p>
+      </section>
+
+      <section class="legend card walking-only" aria-label="Map legend">
+        <h2>Map legend</h2>
+        <div class="legend-items">
+          <span><i class="legend-line shortest-line"></i>Shortest</span>
+          <span><i class="legend-line shadow-line"></i>ShadowRoute</span>
+          <span><i class="legend-area"></i>Pilot area</span>
+        </div>
+      </section>
+      <p class="map-footnote" id="area-info">Loading city area…</p>
+    </aside>
+  </main>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="/app.js" defer></script>
+</body>
+</html>
